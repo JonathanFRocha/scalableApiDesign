@@ -6,7 +6,10 @@ const { SerializerSuppliers } = require("../../Serializer");
 router.get("/", async (req, res) => {
   const results = await tableSupplier.findAll();
   res.status(200);
-  const serializer = new SerializerSuppliers(res.getHeader("Content-Type"));
+  const serializer = new SerializerSuppliers(res.getHeader("Content-Type"), [
+    "email",
+    "createdAt",
+  ]);
   res.send(serializer.serialize(results));
 });
 
