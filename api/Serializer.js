@@ -43,8 +43,17 @@ class SerializerSuppliers extends Serializer {
   }
 }
 
+class SerializerErrors extends Serializer {
+  constructor(contentType, extraFields) {
+    super();
+    this.contentType = contentType;
+    this.publicFields = ["id", "message"].concat(extraFields || []);
+  }
+}
+
 module.exports = {
   Serializer,
   SerializerSuppliers,
+  SerializerErrors,
   acceptedFormats: ["application/json"],
 };
