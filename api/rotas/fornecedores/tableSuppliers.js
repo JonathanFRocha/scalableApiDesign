@@ -2,7 +2,7 @@ const model = require("./tableModelSupplier");
 const NotFound = require("../../error/NotFound");
 module.exports = {
   findAll() {
-    return model.findAll();
+    return model.findAll({ raw: true });
   },
   insert(supplier) {
     return model.create(supplier);

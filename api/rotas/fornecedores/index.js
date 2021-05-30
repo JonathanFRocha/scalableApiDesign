@@ -1,12 +1,13 @@
 const router = require("express").Router();
 const tableSupplier = require("./tableSuppliers");
 const Supplier = require("./supplier");
-const instance = require("../../database");
-const NotFound = require("../../error/NotFound");
+const { SerializerSuppliers } = require("../../Serializer");
+
 router.get("/", async (req, res) => {
   const results = await tableSupplier.findAll();
   res.status(200);
-  res.send(JSON.stringify(results));
+  const serializer = new SerializerSuppliers(res.getHeader("Content-Type"));
+  res.send(serializer.serialize(results));
 });
 
 router.post("/", async (req, res, next) => {
@@ -15,7 +16,9 @@ router.post("/", async (req, res, next) => {
     const supplier = new Supplier(data);
     await supplier.create();
     res.status(201);
-    res.send(JSON.stringify(supplier));
+    const serializer = new SerializerSuppliers(res.getHeader("Content-Type"));
+
+    res.send(serializer.serialize(supplier));
   } catch (error) {
     next(error);
   }
@@ -27,7 +30,8 @@ router.get("/:idSupplier", async (req, res, next) => {
   try {
     await supplier.load();
     res.status(200);
-    res.send(JSON.stringify(supplier));
+    const serializer = new SerializerSuppliers(res.getHeader("Content-Type"));
+    res.send(serializer.serialize(supplier));
   } catch (error) {
     next(error);
   }
