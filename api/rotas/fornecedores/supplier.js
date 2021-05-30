@@ -1,3 +1,5 @@
+const AnyDataProvided = require("../../error/AnyDataProvided");
+const InvalidField = require("../../error/invalidField");
 const supplierTable = require("./tableSuppliers");
 class Supplier {
   constructor({ id, company, email, category, createdAt, updatedAt, version }) {
@@ -49,7 +51,7 @@ class Supplier {
     });
 
     if (Object.keys(dataToUpdate).length === 0) {
-      throw new Error("any data was provided to be updated");
+      throw new AnyDataProvided();
     }
 
     await supplierTable.update(this.id, dataToUpdate);
@@ -64,7 +66,7 @@ class Supplier {
     fields.forEach((field) => {
       const value = this[field];
       if (typeof value !== "string" || value.length === 0) {
-        throw new Error(`the input ${field} is invalid`);
+        throw new InvalidField(field);
       }
     });
   }

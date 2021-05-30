@@ -1,4 +1,5 @@
 const model = require("./tableModelSupplier");
+const NotFound = require("../../error/NotFound");
 module.exports = {
   findAll() {
     return model.findAll();
@@ -11,7 +12,7 @@ module.exports = {
       where: { id },
     });
     if (!foundSupplier) {
-      throw new Error("Supplier not found");
+      throw new NotFound();
     } else {
       return foundSupplier;
     }

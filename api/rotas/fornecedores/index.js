@@ -1,13 +1,15 @@
 const router = require("express").Router();
 const tableSupplier = require("./tableSuppliers");
 const Supplier = require("./supplier");
+const instance = require("../../database");
+const NotFound = require("../../error/NotFound");
 router.get("/", async (req, res) => {
   const results = await tableSupplier.findAll();
   res.status(200);
   res.send(JSON.stringify(results));
 });
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
   try {
     const data = req.body;
     const supplier = new Supplier(data);
@@ -15,16 +17,11 @@ router.post("/", async (req, res) => {
     res.status(201);
     res.send(JSON.stringify(supplier));
   } catch (error) {
-    res.status(400);
-    res.send(
-      JSON.stringify({
-        message: error.message,
-      })
-    );
+    next(error);
   }
 });
 
-router.get("/:idSupplier", async (req, res) => {
+router.get("/:idSupplier", async (req, res, next) => {
   const id = req.params.idSupplier;
   const supplier = new Supplier({ id: id });
   try {
@@ -32,16 +29,11 @@ router.get("/:idSupplier", async (req, res) => {
     res.status(200);
     res.send(JSON.stringify(supplier));
   } catch (error) {
-    res.status(404);
-    res.send(
-      JSON.stringify({
-        mensage: error.message,
-      })
-    );
+    next(error);
   }
 });
 
-router.put("/:idSupplier", async (req, res) => {
+router.put("/:idSupplier", async (req, res, next) => {
   try {
     const id = req.params.idSupplier;
     const data = req.body;
@@ -51,12 +43,7 @@ router.put("/:idSupplier", async (req, res) => {
     res.status(204);
     res.end();
   } catch (error) {
-    res.status(400);
-    res.send(
-      JSON.stringify({
-        message: error.message,
-      })
-    );
+    next(error);
   }
 });
 
